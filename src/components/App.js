@@ -11,13 +11,27 @@ export default class App extends Component {
     this.state = {
       notes: getInitialData(),
     };
+    this.onDeleteHandler = this.onDeleteHandler.bind(this);
+    this.onArchivedHandler = this.onArchivedHandler.bind(this);
   }
+
+  onDeleteHandler(id) {
+    const notes = this.state.notes.filter((note) => note.id !== id);
+    this.setState({notes});
+  }
+
+  onArchivedHandler(archived) {
+    const notes = this.state.notes.filter((note) => note.archived !== archived);
+    this.state({notes});
+  }
+
   render() {
     return (
       <div>
         <Header />
         <Body />
-        <NotesList notes={this.state.notes} />
+        
+        <NotesList notes={this.state.notes} onDelete={this.onDeleteHandler} />
       </div>
     );
   }
