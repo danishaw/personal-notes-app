@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import Body from "./Body";
 import Header from "./Header";
 import { getInitialData } from "../utils/data";
 import ActiveList from "./ActiveList";
 import ArchivedList from "./ArchivedList";
+import InputNote from "./InputNote";
 
 export default class App extends Component {
   constructor(props) {
@@ -14,6 +14,24 @@ export default class App extends Component {
     };
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
     this.updateStatus = this.updateStatus.bind(this);
+    this.onAddHandler = this.onAddHandler.bind(this);
+  }
+
+  onAddHandler({ title, body }) {
+    this.setState((prevState) => {
+      return {
+        notes: [
+          ...prevState.notes,
+          {
+            id: +new Date(),
+            title,
+            body,
+            createdAt: +new Date(),
+            archived: false,
+          },
+        ],
+      };
+    });
   }
 
   onDeleteHandler(id) {
@@ -36,9 +54,17 @@ export default class App extends Component {
     return (
       <div>
         <Header />
-        <Body />
-        <ActiveList notes={this.state.notes} onDelete={this.onDeleteHandler} updateStatus={this.updateStatus} />
-        <ArchivedList notes={this.state.notes} onDelete={this.onDeleteHandler} updateStatus={this.updateStatus}/>
+        <InputNote addNote={this.onAddHandler}/>
+        <ActiveList
+          notes={this.state.notes}
+          onDelete={this.onDeleteHandler}
+          updateStatus={this.updateStatus}
+        />
+        <ArchivedList
+          notes={this.state.notes}
+          onDelete={this.onDeleteHandler}
+          updateStatus={this.updateStatus}
+        />
       </div>
     );
   }
