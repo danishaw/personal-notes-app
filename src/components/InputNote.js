@@ -44,7 +44,6 @@ export default class InputNote extends Component {
         </p>
         <form className="flex flex-col" onSubmit={this.onSubmitEventHandler}>
           <input
-            className=""
             type="text"
             placeholder="Judul catatan ..."
             value={this.state.title}
