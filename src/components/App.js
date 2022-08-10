@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Body from "./Body";
 import Header from "./Header";
-import NotesList from "./NotesList";
 import { getInitialData } from "../utils/data";
+import ActiveList from "./ActiveList";
+import ArchivedList from "./ArchivedList";
 
 export default class App extends Component {
   constructor(props) {
@@ -12,17 +13,23 @@ export default class App extends Component {
       notes: getInitialData(),
     };
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
-    this.onArchivedHandler = this.onArchivedHandler.bind(this);
+    this.updateStatus = this.updateStatus.bind(this);
   }
 
   onDeleteHandler(id) {
     const notes = this.state.notes.filter((note) => note.id !== id);
-    this.setState({notes});
+    this.setState({ notes });
   }
 
-  onArchivedHandler(archived) {
-    const notes = this.state.notes.filter((note) => note.archived !== archived);
-    this.state({notes});
+  updateStatus(id, newStatus) {
+    let allNotes = this.state.notes;
+    allNotes = allNotes.map((note) => {
+      if (note.id === id) {
+        note.archived = newStatus;
+      }
+      return note;
+    });
+    this.setState({ allNotes });
   }
 
   render() {
@@ -30,8 +37,8 @@ export default class App extends Component {
       <div>
         <Header />
         <Body />
-        
-        <NotesList notes={this.state.notes} onDelete={this.onDeleteHandler} />
+        <ActiveList notes={this.state.notes} onDelete={this.onDeleteHandler} updateStatus={this.updateStatus} />
+        <ArchivedList notes={this.state.notes} onDelete={this.onDeleteHandler} updateStatus={this.updateStatus}/>
       </div>
     );
   }

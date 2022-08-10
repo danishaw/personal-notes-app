@@ -1,16 +1,16 @@
 import React from "react";
-import MoveButton from "./MoveButton";
+import ArchivedButton from "./ArchivedButton";
 import NotesItem from "./NotesItem";
 import DeleteButton from "./DeleteButton";
 
-export default function ArchivedList({ notes, onDelete, updateStatus }) {
+export default function ActiveList({ notes, onDelete, updateStatus }) {
   return (
-    <div className="archived p-3 max-w-4xl mx-auto">
-      <h1 className="text-2xl my-4">Arsip</h1>
+    <div className="active p-3 max-w-4xl mx-auto">
+      <h1 className="text-2xl my-4">Aktif</h1>
       <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {notes &&
           notes.map((note) => {
-            if (note && note.archived === true)
+            if (note && note.archived === false)
               return (
                 <div
                   key={note.id}
@@ -19,7 +19,7 @@ export default function ArchivedList({ notes, onDelete, updateStatus }) {
                   <NotesItem {...note} />
                   <div className=" flex border-t">
                     <DeleteButton id={note.id} onDelete={onDelete} />
-                    <MoveButton id={note.id} updateStatus={updateStatus} />
+                    <ArchivedButton id={note.id} updateStatus={updateStatus} />
                   </div>
                 </div>
               );
