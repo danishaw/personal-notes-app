@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Header from "./Header";
 import { getInitialData } from "../utils/data";
-import ActiveList from "./ActiveList";
-import ArchivedList from "./ArchivedList";
+import NotesList from "./NotesList";
 import InputNote from "./InputNote";
 
 export default class App extends Component {
@@ -11,10 +10,18 @@ export default class App extends Component {
 
     this.state = {
       notes: getInitialData(),
+      searchQuery: "",
     };
+    this.onAddHandler = this.onAddHandler.bind(this);
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
     this.updateStatus = this.updateStatus.bind(this);
-    this.onAddHandler = this.onAddHandler.bind(this);
+    this.onSearch = this.onSearch.bind(this);
+  }
+
+  onSearch({ query }) {
+    this.setState(() => {
+      return { searchQuery: query.toLowerCase() };
+    });
   }
 
   onAddHandler({ title, body }) {
@@ -40,28 +47,42 @@ export default class App extends Component {
   }
 
   updateStatus(id, newStatus) {
-    let allNotes = this.state.notes;
-    allNotes = allNotes.map((note) => {
+    const notes = this.state.notes.map((note) => {
       if (note.id === id) {
         note.archived = newStatus;
       }
       return note;
     });
-    this.setState({ allNotes });
+    this.setState({ notes });
   }
-
   render() {
+    const filteredNotes = !this.state.searchQuery
+      ? this.state.notes
+      : this.state.notes.filter((note) =>
+          note.title.toLocaleLowerCase().match(this.state.searchQuery)
+        );
+    const activeList = filteredNotes.filter((note) => {
+      return note.archived === false;
+    });
+    const archivedList = filteredNotes.filter((note) => {
+      return note.archived === true;
+    });
     return (
       <div>
-        <Header />
-        <InputNote addNote={this.onAddHandler}/>
-        <ActiveList
-          notes={this.state.notes}
+        <Header searchQuery={this.onSearch} />
+        <InputNote addNote={this.onAddHandler} />
+        <NotesList
+          notesName="Catatan Aktif"
+          notes={activeList}
+          buttonName="Arsipkan"
           onDelete={this.onDeleteHandler}
           updateStatus={this.updateStatus}
         />
-        <ArchivedList
-          notes={this.state.notes}
+
+        <NotesList
+          notesName="Arsip"
+          notes={archivedList}
+          buttonName="Pindahkan"
           onDelete={this.onDeleteHandler}
           updateStatus={this.updateStatus}
         />

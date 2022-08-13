@@ -5,17 +5,20 @@ export default class SearchNote extends Component {
     super(props);
 
     this.state = {
-      search: "",
+      query: "",
     };
-    this.onSearchEventHandler = this.onSearchEventHandler.bind(this);
+    this.onInputHandler = this.onInputHandler.bind(this);
   }
 
-  onSearchEventHandler(event) {
-    this.setState(() => {
-      return {
-        search: event.target.value,
-      };
-    });
+  onInputHandler(event) {
+    this.setState(
+      {
+        query: event.target.value,
+      },
+      () => {
+        this.props.searchQuery(this.state);
+      }
+    );
   }
 
   render() {
@@ -25,7 +28,8 @@ export default class SearchNote extends Component {
           className=""
           type="text"
           placeholder="Cari catatan . . ."
-          onChange={this.onSearchEventHandler}
+          value={this.state.query}
+          onChange={this.onInputHandler}
         />
       </form>
     );

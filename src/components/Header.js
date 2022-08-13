@@ -1,11 +1,12 @@
 import React from 'react'
 import SearchNote from './SearchNote'
 
-export default function Header() {
+
+export default function Header({ searchQuery }) {
   return (
     <div className='flex items-center justify-center px-4 border-b-2'>
         <h1 className='flex-1 text-3xl font-bold'>My Notes</h1>
-        <SearchNote/>
+        <SearchNote searchQuery={searchQuery}/>
     </div>
   )
 }
